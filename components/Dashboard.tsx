@@ -35,7 +35,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
+        <div className="container mx-auto p-6 space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-900">Sr Dashboard</h1>
                 <Button onClick={() => router.push('./srbooster')} variant="outline">
