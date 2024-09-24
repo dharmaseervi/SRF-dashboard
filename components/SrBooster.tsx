@@ -1,264 +1,197 @@
-'use client';
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Badge } from './ui/badge';
-import { LineCharts } from './LineChart';
-import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Separator } from './ui/separator';
-import { Chart } from './chart';
-import { Label } from './ui/label';
-import { CreditCard, DollarSign, ScanLine, Users } from 'lucide-react';
+'use client'
+
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Badge } from '@/components/ui/badge'
+import { LineCharts } from './LineChart'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Chart } from './chart'
+import { Label } from '@/components/ui/label'
+import { CreditCard, DollarSign, ScanLine, Users, ArrowRight, TrendingUp, Wallet, Smartphone, Globe, AlertTriangle } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Progress } from '@/components/ui/progress'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const SrBooster: React.FC = () => {
-  const [cardFlag3Approved, setCardFlag3Approved] = useState(false);
-  const [upiFlag3Approved, setUpiFlag3Approved] = useState(false);
-  const [netbankingFlag3Approved, setNetbankingFlag3Approved] = useState(false);
-  const router = useRouter();
+  const [cardFlag3Approved, setCardFlag3Approved] = useState(false)
+  const [upiFlag3Approved, setUpiFlag3Approved] = useState(false)
+  const [netbankingFlag3Approved, setNetbankingFlag3Approved] = useState(false)
+  const router = useRouter()
 
   const handleRequestBoost = (paymentMethod: string) => {
     // Logic for boosting success rate
-  };
+    console.log(`Boost requested for ${paymentMethod}`)
+  }
 
   const FlagButton = ({
     label,
     status,
     onClick,
-    disabled = false, // Provide default value
+    disabled = false,
   }: {
-    label: string;
-    status: 'request' | 'approved' | 'pending';
-    onClick?: () => void;
-    disabled?: boolean;
+    label: string
+    status: 'request' | 'approved' | 'pending'
+    onClick?: () => void
+    disabled?: boolean
   }) => {
-    const statusClasses =
-      status === 'approved'
-        ? 'border border-green-600 text-green-600'
-        : 'border border-red-600 text-red-600';
-
     return (
       <div className="flex justify-between items-center mt-2">
-        <Label className='font-medium text-lg'>{label}</Label>
+        <Label className="font-medium text-lg">{label}</Label>
         {status === 'request' ? (
           <Button
             variant="destructive"
-            size="lg"
+            size="sm"
             onClick={onClick}
-            className="w-44 "
-            disabled={disabled} // Disable based on prop
+            className="w-32"
+            disabled={disabled}
           >
             Request Boost
           </Button>
         ) : (
           <Badge
-            variant={status === 'approved' ? 'outline' : 'secondary'}
-            className="w-44 py-3 flex justify-center"
+            variant={status === 'approved' ? 'success' : 'secondary'}
+            className="w-32 py-1 flex justify-center"
           >
             {status === 'approved' ? 'Approved' : 'Pending'}
           </Badge>
         )}
       </div>
-    );
-  };
+    )
+  }
+
+  const PaymentMethodCard = ({ title, icon: Icon, transactions, successRate, change }) => (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">Total: {transactions.toLocaleString()}</div>
+        <div className="text-lg font-medium">Success: {Math.round(transactions * successRate / 100).toLocaleString()}</div>
+        <Progress value={successRate} className="mt-2" />
+        <p className="text-xs text-muted-foreground mt-1">
+          Success Rate: {successRate}% ({change > 0 ? '+' : ''}{change}% from last month)
+        </p>
+      </CardContent>
+    </Card>
+  )
+
+  const paymentMethods = [
+    { title: 'Credit Cards', icon: CreditCard, transactions: 12234, successRate: 94.0, change: 5.2 },
+    { title: 'UPI', icon: ScanLine, transactions: 5000, successRate: 96.0, change: 3.8 },
+    { title: 'Debit Cards', icon: Users, transactions: 4000, successRate: 90.0, change: 2.5 },
+    { title: 'Netbanking', icon: DollarSign, transactions: 3234, successRate: 92.8, change: 4.1 },
+    { title: 'E-Wallets', icon: Wallet, transactions: 2500, successRate: 95.5, change: 6.2 },
+    { title: 'Mobile Pay', icon: Smartphone, transactions: 1800, successRate: 93.2, change: 3.9 },
+    { title: 'International', icon: Globe, transactions: 1200, successRate: 88.5, change: 1.8 }
+  ]
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold font-serif">Success Rate Booster</h1>
-        <Button variant="secondary" onClick={() => router.push('/srfdashboard')}>
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Success Rate Booster</h1>
+        <Button variant="outline" onClick={() => router.push('/srfdashboard')}>
           SRF Dashboard
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="ml-2 w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-            />
-          </svg>
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-        <Card x-chunk="dashboard-01-chunk-2">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">All Methods</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Total Transactions: 12,234</div>
-            <div className="text-lg font-medium">Successful Transactions: 11,500</div>
-            <p className="text-xs text-muted-foreground">
-              Success Rate: +94.0%
-            </p>
-          </CardContent>
-        </Card>
+      <Alert>
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Attention</AlertTitle>
+        <AlertDescription>
+          Our AI has detected potential for improvement in your UPI and International payment success rates. Consider boosting these methods for better performance.
+        </AlertDescription>
+      </Alert>
 
-        <Card x-chunk="dashboard-01-chunk-2">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">UPI</CardTitle>
-            <ScanLine className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Total Transactions: 5,000</div>
-            <div className="text-lg font-medium">Successful Transactions: 4,800</div>
-            <p className="text-xs text-muted-foreground">
-              Success Rate: +96.0%
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card x-chunk="dashboard-01-chunk-2">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cards</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Total Transactions: 4,000</div>
-            <div className="text-lg font-medium">Successful Transactions: 3,600</div>
-            <p className="text-xs text-muted-foreground">
-              Success Rate: +90.0%
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card x-chunk="dashboard-01-chunk-2">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Netbanking</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Total Transactions: 3,234</div>
-            <div className="text-lg font-medium">Successful Transactions: 3,000</div>
-            <p className="text-xs text-muted-foreground">
-              Success Rate: +92.8%
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {paymentMethods.map((method) => (
+          <PaymentMethodCard key={method.title} {...method} />
+        ))}
       </div>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Existing vs Predicted Success Rate</CardTitle>
+          <CardDescription>Comparison of current and potential success rates across all payment methods</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="w-full md:w-3/4 lg:w-2/3 mx-auto">
+            <Chart />
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Chart for existing vs predicted */}
-      <div className="bg-white shadow-md rounded-md p-6 mb-6 border mt-2">
-        <h2 className="text-xl font-semibold text-center mb-4">
-          Existing vs Predicted Success Rate
-        </h2>
-        <div className="w-full md:w-3/4 lg:w-1/2 mx-auto">
-          <Chart />
-        </div>
-      </div>
+      <Tabs defaultValue="credit-cards">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7">
+          {paymentMethods.map((method) => (
+            <TabsTrigger key={method.title} value={method.title.toLowerCase().replace(' ', '-')}>
+              {method.title}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {paymentMethods.map((method) => (
+          <TabsContent key={method.title} value={method.title.toLowerCase().replace(' ', '-')}>
+            <Card>
+              <CardHeader>
+                <CardTitle>{method.title}</CardTitle>
+                <CardDescription>Detailed success rate information and boost options</CardDescription>
+              </CardHeader>
+              <CardContent className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <div className="text-2xl font-bold">Total Transactions: {method.transactions.toLocaleString()}</div>
+                  <div className="text-lg font-medium text-green-600">Success Rate: {method.successRate}%</div>
+                  <p className="text-sm text-muted-foreground">{method.change > 0 ? '+' : ''}{method.change}% from last month</p>
+                  <Separator className="my-4" />
+                  <div className="space-y-4">
+                    <FlagButton
+                      label="Optimize Routing"
+                      status="request"
+                      onClick={() => handleRequestBoost(`${method.title} - Optimize Routing`)}
+                    />
+                    <FlagButton 
+                      label="Enhance Security"
+                      status="pending"
+                    />
+                    <FlagButton
+                      label="AI-Powered Fraud Detection"
+                      status="approved"
+                      onClick={() => console.log(`${method.title} - AI-Powered Fraud Detection activated`)}
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold mb-2 flex items-center">
+                    <TrendingUp className="mr-2 h-4 w-4" />
+                    Success Rate Trend
+                  </h4>
+                  <LineCharts />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
 
-      {/* Cards Section */}
-      <div className="grid grid-cols-1 gap-6">
-        {/* Card for 'Card' payment */}
-        <Card className="grid grid-cols-2 gap-4 ">
-          <CardContent className=" p-4">
-            <CardHeader className="mb-4">
-              <CardTitle>Card Payment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">Total Transactions: 3,234</div>
-              <div className="text-lg font-medium text-green-500">Success Rate: +92.8%</div>
-              <p className="text-xs text-muted-foreground">+5% from last month</p>
-              <div className="mt-5 space-y-4">
-                <FlagButton
-                  label="Flag 1"
-                  status="request"
-                  onClick={() => handleRequestBoost('Card')}
-                />
-                <Separator />
-                <FlagButton label="Flag 2" status="pending" />
-                <FlagButton
-                  label="Flag 3"
-                  status="approved"
-                  onClick={() => setCardFlag3Approved(true)}
-                  disabled={true}
-                />
-              </div>
-            </CardContent>
-          </CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle>Recommendations</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Implement 3D Secure 2.0 for all card transactions to reduce fraud and increase authorization rates.</li>
+            <li>Optimize your payment routing algorithm to choose the most reliable payment processors in real-time.</li>
+            <li>Set up automatic retries for failed transactions, especially for UPI and mobile payments.</li>
+            <li>Implement dynamic currency conversion for international payments to improve the customer experience.</li>
+            <li>Use machine learning models to detect and prevent fraudulent transactions before they occur.</li>
+          </ul>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
 
-          <CardContent className="mt-4">
-            <h4 className="text-sm font-semibold mb-2">Success Rate Trend</h4>
-            <LineCharts />
-          </CardContent>
-        </Card>
-
-        {/* Card for 'UPI' payment */}
-        <Card className="grid grid-cols-2 gap-4">
-          <CardContent className=" p-4">
-            <CardHeader className="mb-4">
-              <CardTitle>UPI Payment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">Total Transactions: 3,234</div>
-              <div className="text-lg font-medium text-green-500">Success Rate: +92.8%</div>
-              <p className="text-xs text-muted-foreground">+5% from last month</p>
-              <div className="space-y-4">
-                <FlagButton
-                  label="Flag 1"
-                  status="request"
-                  onClick={() => handleRequestBoost('UPI')}
-                />
-                <Separator />
-                <FlagButton label="Flag 2" status="pending" />
-                <FlagButton
-                  label="Flag 3"
-                  status="approved"
-                  onClick={() => setUpiFlag3Approved(true)}
-                  disabled={true}
-                />
-              </div>
-            </CardContent>
-          </CardContent>
-
-          <CardContent className="mt-4">
-            <h4 className="text-sm font-semibold mb-2">Success Rate Trend</h4>
-            <LineCharts />
-          </CardContent>
-        </Card>
-
-        {/* Card for 'Netbanking' payment */}
-        <Card className="grid grid-cols-2 gap-4">
-          <CardContent className=" p-4">
-            <CardHeader className="mb-4">
-              <CardTitle>Netbanking Payment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">Total Transactions: 3,234</div>
-              <div className="text-lg font-medium text-green-500">Success Rate: +92.8%</div>
-              <p className="text-xs text-muted-foreground">+5% from last month</p>
-              <div className="space-y-4">
-                <FlagButton
-                  label="Flag 1"
-                  status="request"
-                  onClick={() => handleRequestBoost('Netbanking')}
-                />
-                <Separator />
-                <FlagButton label="Flag 2" status="pending" />
-                <FlagButton
-                  label="Flag 3"
-                  status="approved"
-                  onClick={() => setNetbankingFlag3Approved(true)}
-                  disabled={true}
-                />
-              </div>
-            </CardContent>
-          </CardContent>
-
-          <CardContent className="mt-4">
-            <h4 className="text-sm font-semibold mb-2">Success Rate Trend</h4>
-            <LineCharts />
-          </CardContent>
-        </Card>
-      </div>
-    </div >
-  );
-};
-
-export default SrBooster;
+export default SrBooster
