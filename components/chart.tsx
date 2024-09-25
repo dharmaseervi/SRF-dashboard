@@ -44,10 +44,6 @@ export function Chart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Success Rate Chart</CardTitle>
-        <CardDescription>
-          Showing current vs predicted success rates for the last 6 months
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
