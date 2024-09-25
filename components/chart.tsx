@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { TrendingUp } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -10,43 +10,43 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
-export const description = "A stacked area chart"
+export const description = "Current and Predicted SR Chart";
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+  { month: "January", currentSR: 79, predictedSR: 79 },
+  { month: "February", currentSR: 82, predictedSR: 86 },
+  { month: "March", currentSR: 81, predictedSR: 84 },
+  { month: "April", currentSR: 79, predictedSR: 83 },
+  { month: "May", currentSR: 84, predictedSR: 87 },
+  { month: "June", currentSR: 83, predictedSR: 87 },
+];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
+  currentSR: {
+    label: "Current SR",
+    color: "hsl(var(--chart-1))", // Customize with desired color variable
   },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
+  predictedSR: {
+    label: "Predicted SR",
+    color: "hsl(var(--chart-2))", // Customize with desired color variable
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function Chart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
+        <CardTitle>Success Rate Chart</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Showing current vs predicted success rates for the last 6 months
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -67,24 +67,27 @@ export function Chart() {
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 3)}
             />
+           
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dot" />}
             />
             <Area
-              dataKey="mobile"
+              dataKey="currentSR"
               type="natural"
-              fill="var(--color-mobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
+              fill="var(--color-currentSR)"
+              fillOpacity={0.2} // Subtle background fill
+              stroke="var(--color-currentSR)"
+              strokeWidth={1.5} // Reduced stroke width for current SR
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="predictedSR"
               type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              fill="var(--color-predictedSR)"
+              fillOpacity={0.2} // Subtle background fill
+              stroke="var(--color-predictedSR)"
+              strokeWidth={1.5} // Reduced stroke width for predicted SR
               stackId="a"
             />
           </AreaChart>
@@ -103,5 +106,5 @@ export function Chart() {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 
 import {
   Card,
@@ -18,24 +18,24 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-export const description = "A multiple line chart"
+export const description = "A multiple line chart for Success Rate"
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "January", currentSR: 75, predictedSR: 85 },
+  { month: "February", currentSR: 76, predictedSR: 86 },
+  { month: "March", currentSR: 78, predictedSR: 88 },
+  { month: "April", currentSR: 80, predictedSR: 90 },
+  { month: "May", currentSR: 82, predictedSR: 92 },
+  { month: "June", currentSR: 83, predictedSR: 93 },
 ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  currentSR: {
+    label: "Current SR",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  predictedSR: {
+    label: "Predicted SR",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
@@ -44,7 +44,7 @@ export function LineCharts() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart - Multiple</CardTitle>
+        <CardTitle>Line Chart - Success Rate</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
@@ -65,19 +65,20 @@ export function LineCharts() {
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 3)}
             />
+            <YAxis domain={[70, 100]} tickLine={false} axisLine={false} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
-              dataKey="desktop"
+              dataKey="currentSR"
               type="monotone"
-              stroke="var(--color-desktop)"
+              stroke="var(--color-currentSR)"
               strokeWidth={2}
               dot={false}
             />
             <Line
-              dataKey="mobile"
+              dataKey="predictedSR"
               type="monotone"
-              stroke="var(--color-mobile)"
-              strokeWidth={2}
+              stroke="var(--color-predictedSR)"
+              strokeWidth={3} // Make predicted line a bit thicker for distinction
               dot={false}
             />
           </LineChart>
@@ -90,7 +91,7 @@ export function LineCharts() {
               Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total visitors for the last 6 months
+              Showing success rates for January - June 2024
             </div>
           </div>
         </div>

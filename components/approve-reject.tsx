@@ -98,7 +98,7 @@ export default function ApproveRejectDashboard() {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-4xl font-bold text-center mb-10">Approve/Reject Requests</h1>
+      <h1 className="text-4xl font-bold text-center mb-10">SRF Dashboard</h1>
 
       {/* Dashboard Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -108,7 +108,7 @@ export default function ApproveRejectDashboard() {
               <CardTitle className="text-sm font-medium">
                 {status.charAt(0).toUpperCase() + status.slice(1)}
               </CardTitle>
-              <Badge variant={status === 'approved' ? 'success' : status === 'rejected' ? 'destructive' : 'default'}>
+              <Badge variant={status === 'approved' ? 'secondary' : status === 'rejected' ? 'destructive' : 'default'}>
                 {counts[status] || 0}
               </Badge>
             </CardHeader>
@@ -194,7 +194,7 @@ export default function ApproveRejectDashboard() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={request.status === 'approved' ? 'success' : request.status === 'rejected' ? 'destructive' : 'default'}>
+                    <Badge variant={request.status === 'approved' ? 'secondary' : request.status === 'rejected' ? 'destructive' : 'default'}>
                       {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
                     </Badge>
                   </TableCell>
